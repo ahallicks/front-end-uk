@@ -1,4 +1,4 @@
-import type { IContent } from '~/components/molecules/content/content-types.ts';
+import type { IContent } from '~/components/02-molecules/content/content-types.ts';
 
 import { GraphQLClient, gql } from 'graphql-request';
 
@@ -23,8 +23,8 @@ export interface ISubPage {
 		picture: string;
 	};
 	introduction: string;
-	sections: IContent[]
-};
+	sections: IContent[];
+}
 
 type TPagesParams = {
 	slug: string;
@@ -102,13 +102,20 @@ const getSubPagesQuery = ({ slug }: TPagesParams): string => gql`
 	}
 `;
 
-export const getSubPages = async ({ slug }: TPagesParams): Promise<ISubPage[]> => {
+export const getSubPages = async ({
+	slug,
+}: TPagesParams): Promise<ISubPage[]> => {
 	try {
-		const hygraph = new GraphQLClient(process.env.HYGRAPH_ENDPOINT as string, {
-			headers: {},
-		});
+		const hygraph = new GraphQLClient(
+			process.env.HYGRAPH_ENDPOINT as string,
+			{
+				headers: {},
+			},
+		);
 
-		const { pages }: ISubPages = await hygraph.request(getSubPagesQuery({ slug }));
+		const { pages }: ISubPages = await hygraph.request(
+			getSubPagesQuery({ slug }),
+		);
 		if (!pages || pages.length === 0) {
 			return [];
 		}

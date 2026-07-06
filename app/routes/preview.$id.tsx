@@ -6,7 +6,8 @@ import { useLoaderData } from 'react-router';
 
 import { getPreviewPage } from '~/services/get-page.ts';
 
-import { PageSections } from '~/components/layouts/page-sections/page-sections.tsx';
+import { WordCounter } from '~/components/01-atoms/word-counter/word-counter.tsx';
+import { PageSections } from '~/components/04-layouts/page-sections/page-sections.tsx';
 
 export const loader = async ({
 	params,

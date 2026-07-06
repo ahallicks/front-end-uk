@@ -1,39 +1,42 @@
-import type { IArticleCards } from '~/components/organisms/article-cards/article-cards-types.ts';
-import type { IAuthorCard } from '~/components/molecules/author-card/author-card-types.ts';
-import type { IBanner } from '~/components/molecules/banner/banner-types.ts';
-import type { ICardList } from '~/components/organisms/card-list/card-list-types.ts';
-import type { TCategoryPage } from '~/types/global-types.ts';
-import type { IContent } from '~/components/molecules/content/content-types.ts';
-import type { IDivider } from '~/components/atoms/divider/divider-types.ts';
-import type { IFeatureBlock } from '~/components/molecules/feature/feature-types.ts';
-import type { IHero } from '~/components/molecules/hero/hero-types.ts';
 import type { IHomepage } from './get-homepage.ts';
-import type { ILogoCloud } from '~/components/molecules/logo-cloud/logo-cloud-types.ts';
-import type { IRelatedArticles } from '~/components/organisms/related-articles/related-articles-types.ts';
-import type { IStatistics } from '~/components/molecules/statistics/statistics-types.ts';
+import type { IComment } from '~/components/01-atoms/comment/comment-types.ts';
+import type { IDivider } from '~/components/01-atoms/divider/divider-types.ts';
+import type { IAuthorCard } from '~/components/02-molecules/author-card/author-card-types.ts';
+import type { IBanner } from '~/components/02-molecules/banner/banner-types.ts';
+import type { IContent } from '~/components/02-molecules/content/content-types.ts';
+import type { IFeatureBlock } from '~/components/02-molecules/feature/feature-types.ts';
+import type { IHero } from '~/components/02-molecules/hero/hero-types.ts';
+import type { ILogoCloud } from '~/components/02-molecules/logo-cloud/logo-cloud-types.ts';
+import type { IStatistics } from '~/components/02-molecules/statistics/statistics-types.ts';
+import type { IArticleCards } from '~/components/03-organisms/article-cards/article-cards-types.ts';
+import type { ICardList } from '~/components/03-organisms/card-list/card-list-types.ts';
+import type { IRelatedArticles } from '~/components/03-organisms/related-articles/related-articles-types.ts';
+import type { TCategoryPage } from '~/types/global-types.ts';
 
 // import { writeFileSync } from 'node:fs';
 import { GraphQLClient, gql } from 'graphql-request';
 
 import { NotRedis, createCacheKey } from '~/services/notredis.ts';
-import { fixThePage, randomiseThePage } from '~/utils/page-fixer.ts';
 import { tc } from '~/services/terminal-colours.ts';
-import { getAllPages } from './get-all-pages.ts';
+import { fixThePage, randomiseThePage } from '~/utils/page-fixer.ts';
 
-import { ArticleCardsFragment } from '~/components/organisms/article-cards/article-cards-fragment.ts';
-import { AuthorCardFragment } from '~/components/molecules/author-card/author-card-fragment.ts';
-import { BannerFragment } from '~/components/molecules/banner/banner-fragment.tsx';
-import { CardListFragment } from '~/components/organisms/card-list/card-list-fragment.ts';
-import { ContentFragment } from '~/components/molecules/content/content-fragment.ts';
-import { DividerFragment } from '~/components/atoms/divider/divider-fragment.ts';
-import { FeatureFragment } from '~/components/molecules/feature/feature-fragment.tsx';
-import { HeroFragment } from '~/components/molecules/hero/hero-fragment.tsx';
-import { LogoCloudFragment } from '~/components/molecules/logo-cloud/logo-cloud-fragment.ts';
+import { CommentFragment } from '~/components/01-atoms/comment/comment-fragment.ts';
+import { DividerFragment } from '~/components/01-atoms/divider/divider-fragment.ts';
+import { AuthorCardFragment } from '~/components/02-molecules/author-card/author-card-fragment.ts';
+import { BannerFragment } from '~/components/02-molecules/banner/banner-fragment.ts';
+import { ContentFragment } from '~/components/02-molecules/content/content-fragment.ts';
+import { FeatureFragment } from '~/components/02-molecules/feature/feature-fragment.ts';
+import { HeroFragment } from '~/components/02-molecules/hero/hero-fragment.ts';
+import { LogoCloudFragment } from '~/components/02-molecules/logo-cloud/logo-cloud-fragment.ts';
+import { StatisticsFragment } from '~/components/02-molecules/statistics/statistics-fragment.ts';
+import { ArticleCardsFragment } from '~/components/03-organisms/article-cards/article-cards-fragment.ts';
+import { CardListFragment } from '~/components/03-organisms/card-list/card-list-fragment.ts';
 import {
 	ArticleCategoryFragment,
 	RelatedArticlesFragment,
-} from '~/components/organisms/related-articles/related-articles-fragment.ts';
-import { StatisticsFragment } from '~/components/molecules/statistics/statistics-fragment.ts';
+} from '~/components/03-organisms/related-articles/related-articles-fragment.ts';
+
+import { getAllPages } from './get-all-pages.ts';
 
 export interface IPage {
 	id: string;
@@ -47,6 +50,11 @@ export interface IPage {
 		pages: TCategoryPage[];
 	}[];
 	introduction?: string;
+	enableComments?: boolean;
+	comments: IComment[];
+	created: string;
+	updated?: string;
+	published?: string;
 	sections:
 		| ICardList[]
 		| IHero[]
@@ -73,6 +81,13 @@ const getPageQuery = (id: string): string => gql`
 			${ArticleCategoryFragment(id)}
 		}
 		introduction
+		comments (where: { approved: true }) {
+			${CommentFragment}
+		}
+		enableComments
+		created: createdAt
+		updated: updatedAt
+		published: publishedAt
 		sections {
 			__typename
 			${ArticleCardsFragment}

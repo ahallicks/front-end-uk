@@ -1,5 +1,5 @@
 import type { RichTextProps } from '@graphcms/rich-text-react-renderer';
-import type { IAuthorCard } from '~/components/molecules/author-card/author-card-types.ts';
+import type { IAuthorCard } from '~/components/02-molecules/author-card/author-card-types.ts';
 
 export type TImage = {
 	url: string;

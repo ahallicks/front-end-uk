@@ -1,6 +1,7 @@
-import type { LinksFunction } from 'react-router';
 import type { IGlobalData } from './services/get-global-data.ts';
+import type { LinksFunction } from 'react-router';
 
+import { Fragment } from 'react/jsx-runtime';
 import {
 	Links,
 	Meta,
@@ -12,19 +13,19 @@ import {
 	useLoaderData,
 	useRouteError,
 } from 'react-router';
-import { Fragment } from 'react/jsx-runtime';
 
-import { getGlobalData } from './services/get-global-data.ts';
+import { getGlobalData } from '~/services/get-global-data.ts';
+import { Axe } from '~/utils/report-accessibility.tsx';
 
-import { Banner } from './components/molecules/banner/banner.tsx';
-import { Footer } from '~/components/molecules/footer/footer.tsx';
-import { HeaderComponent } from '~/components/molecules/header/header.tsx';
-import { LogoCloud } from './components/molecules/logo-cloud/logo-cloud.tsx';
-import { Strip } from './components/molecules/strip/strip.tsx';
+import { Banner } from '~/components/02-molecules/banner/banner.tsx';
+import { Footer } from '~/components/02-molecules/footer/footer.tsx';
+import { HeaderComponent } from '~/components/02-molecules/header/header.tsx';
+import { LogoCloud } from '~/components/02-molecules/logo-cloud/logo-cloud.tsx';
+import { Strip } from '~/components/02-molecules/strip/strip.tsx';
+import { NotFound } from '~/components/04-layouts/404/404.tsx';
+import { PreviewWrapper } from '~/components/04-layouts/previews/previews.tsx';
 
 import './app.css';
-import { NotFound } from './components/layouts/404/404.tsx';
-import { PreviewWrapper } from './components/layouts/previews/previews.tsx';
 
 export const links: LinksFunction = () => [
 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -68,7 +69,7 @@ export const Structure = ({
 }): React.ReactNode => (
 	<html
 		lang="en"
-		className="h-full bg-white dark:bg-gray-900 scheme-light dark:scheme-dark"
+		className="h-full bg-white scheme-light dark:bg-gray-900 dark:scheme-dark"
 	>
 		<head>
 			<meta charSet="utf-8" />
@@ -79,7 +80,8 @@ export const Structure = ({
 			<Meta />
 			<Links />
 		</head>
-		<body className="min-h-full flex flex-col">
+		<body className="flex min-h-full flex-col">
+			<Axe />
 			<PreviewWrapper>{children}</PreviewWrapper>
 			<ScrollRestoration />
 			<Scripts />

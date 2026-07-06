@@ -1,5 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import 'vitest-canvas-mock';
+
 import { config as loadDotenv } from 'dotenv';
 
 // Many server modules now use `getEnv()` (validated runtime env) instead of

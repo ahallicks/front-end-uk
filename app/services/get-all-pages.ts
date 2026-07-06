@@ -1,6 +1,7 @@
 import type { TSinglePage } from './get-page.ts';
 
 import { GraphQLClient, gql } from 'graphql-request';
+
 import { NotRedis, createCacheKey } from '~/services/notredis.ts';
 import { tc } from '~/services/terminal-colours.ts';
 
@@ -28,9 +29,12 @@ export const getPagesQuery = gql`
 export const getAllPages = async (): Promise<TAllPages> => {
 	let allPages: TAllPages;
 	try {
-		const hygraph = new GraphQLClient(process.env.HYGRAPH_ENDPOINT as string, {
-			headers: {},
-		});
+		const hygraph = new GraphQLClient(
+			process.env.HYGRAPH_ENDPOINT as string,
+			{
+				headers: {},
+			},
+		);
 
 		const cache = NotRedis.getInstance();
 		const cacheKey = createCacheKey('id', 'pages', {});
@@ -57,4 +61,4 @@ export const getAllPages = async (): Promise<TAllPages> => {
 		console.error('Error fetching page data:', error);
 		throw new Response('Page not found', { status: 404 });
 	}
-}
+};

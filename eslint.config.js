@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { FlatCompat } from '@eslint/eslintrc';
 import pluginJs from '@eslint/js';
+import { importX } from 'eslint-plugin-import-x';
 import pluginReact from 'eslint-plugin-react';
 import globals from 'globals';
 import { configs as tsLintConfigs } from 'typescript-eslint';
@@ -18,7 +19,6 @@ const config = [
 	{
 		ignores: [
 			'node_modules/*',
-			'.next/*',
 			'out/**',
 			'build/**',
 			'.husky/*',
@@ -26,9 +26,10 @@ const config = [
 			'**/infrastructure',
 			'**/public',
 			'!**/.prettierrc.js',
-			'src/stories/**/*',
+			'app/stories/**/*',
 			'**/coverage/**/*',
-			'.react-router/*',
+			'playwright-report/*',
+			'.react-router/**',
 		],
 	},
 	{
@@ -39,14 +40,16 @@ const config = [
 	},
 	{
 		plugins: {
-			js: pluginJs,
-			react: pluginReact,
+			'js': pluginJs,
+			'react': pluginReact,
+			'import-x': importX,
 		},
 	},
 	...tsLintConfigs.recommended,
 	...compat.extends(
 		'plugin:jsx-a11y/recommended',
 		'plugin:react-hooks/recommended',
+		'plugin:storybook/recommended',
 		'plugin:import/recommended',
 		'plugin:import/typescript',
 	),
@@ -71,6 +74,7 @@ const config = [
 					project: './tsconfig.json',
 				},
 			},
+			'import/core-modules': ['./layers.css?url'],
 		},
 
 		rules: {
@@ -82,7 +86,7 @@ const config = [
 			'@typescript-eslint/no-var-requires': 'off',
 			'@typescript-eslint/no-unused-vars': 'warn',
 			'@typescript-eslint/explicit-function-return-type': [
-				'warn',
+				'off',
 				{
 					allowExpressions: true,
 					allowConciseArrowFunctionExpressionsStartingWithVoid: true,
@@ -122,6 +126,67 @@ const config = [
 				},
 			],
 			'import/no-unresolved': 'error',
+			'import/order': 'off',
+			'import-x/order': [
+				// type imports
+				// npm packages
+				// utils/contexts/services/hooks
+				// components
+				// styles
+
+				'error',
+				{
+					'groups': [
+						'type',
+						'builtin',
+						'external',
+						'internal',
+						'parent',
+						'index',
+						'sibling',
+						'unknown',
+					],
+					'pathGroups': [
+						{
+							pattern: '@**',
+							group: 'external',
+						},
+						{
+							pattern:
+								'~/+(contexts|hooks|mappers|services|schemas|utils)/**',
+							group: 'internal',
+						},
+						{
+							pattern: '~/*.ts',
+							group: 'internal',
+						},
+						{
+							pattern: '~/components/**',
+							group: 'internal',
+							position: 'after',
+						},
+						{
+							pattern: './components/**',
+							group: 'parent',
+							position: 'after',
+						},
+						{
+							pattern: '../*.css',
+							group: 'parent',
+						},
+						{
+							pattern: './*.css',
+							group: 'sibling',
+						},
+					],
+					'pathGroupsExcludedImportTypes': ['type'],
+					'newlines-between': 'always',
+					'alphabetize': {
+						order: 'asc',
+						caseInsensitive: true,
+					},
+				},
+			],
 		},
 	},
 ];

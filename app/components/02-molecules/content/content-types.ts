@@ -1,0 +1,28 @@
+import type { IBanner } from '../banner/banner-types.ts';
+import type { IFeatureBlock } from '../feature/feature-types.ts';
+import type { RichTextProps } from '@graphcms/rich-text-react-renderer';
+import type { TCategory, TImage } from '~/types/global-types.ts';
+
+export interface IArticle {
+	__typename: 'Article';
+	id: string;
+	contentId: string;
+	content?: {
+		raw?: RichTextProps['content'];
+		json?: RichTextProps['content'];
+		references?: RichTextProps['references'];
+	};
+	articleImage?: TImage;
+}
+
+export interface IContent {
+	__typename: 'Content';
+	id: string;
+	contentId: string;
+	title?: string;
+	pretitle?: string;
+	introduction?: string;
+	contentImage?: TImage;
+	article?: IBanner[] | IArticle[] | IFeatureBlock[];
+	categories?: TCategory[];
+}
