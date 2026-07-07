@@ -1,16 +1,16 @@
-import type { IArticleCard } from '~/components/molecules/article-card/article-card-types.ts';
-import type { TCategoryPage } from '~/types/global-types.ts';
 import type { IPage } from './get-page.ts';
 import type { RichTextProps } from '@graphcms/rich-text-react-renderer';
+import type { IArticleCard } from '~/components/02-molecules/article-card/article-card-types.ts';
+import type { TCategoryPage } from '~/types/global-types.ts';
 
 // import { writeFileSync } from 'node:fs';
 import { GraphQLClient, gql } from 'graphql-request';
 
 import { NotRedis, createCacheKey } from '~/services/notredis.ts';
-import { fixThePage } from '~/utils/page-fixer.ts';
 import { tc } from '~/services/terminal-colours.ts';
+import { fixThePage } from '~/utils/page-fixer.ts';
 
-import { AuthorCardFragment } from '~/components/molecules/author-card/author-card-fragment.ts';
+import { AuthorCardFragment } from '~/components/02-molecules/author-card/author-card-fragment.ts';
 
 export interface ICategoryPage {
 	articleCategory: {

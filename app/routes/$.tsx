@@ -8,18 +8,23 @@ import {
 } from 'react-router';
 
 import { getPage } from '~/services/get-page.ts';
+import { getSession } from '~/session.server.ts';
 
-import { NotFound } from '~/components/layouts/404/404.tsx';
-import { PageSections } from '~/components/layouts/page-sections/page-sections.tsx';
+import { NotFound } from '~/components/04-layouts/404/404.tsx';
+import { PageSections } from '~/components/04-layouts/page-sections/page-sections.tsx';
 
 export const loader = async ({
 	params,
-}: LoaderFunctionArgs): Promise<{ page: IPage }> => {
+	request,
+}: LoaderFunctionArgs): Promise<{ page: IPage; formKey: string }> => {
 	const filePath = params['*'];
+	const session = await getSession(request.headers.get('Cookie'));
+	const formKey = crypto.randomUUID();
+	session.set('formKey', formKey);
 
 	try {
 		const page = await getPage({ filePath: filePath });
-		return { page };
+		return { page, formKey };
 	} catch (error) {
 		console.error('Error fetching page data:', error);
 		throw new Response('Page not found', { status: 404 });
@@ -27,12 +32,12 @@ export const loader = async ({
 };
 
 export default function Page(): React.ReactNode {
-	const { page } = useLoaderData<typeof loader>();
+	const { page, formKey } = useLoaderData<typeof loader>();
 	return (
 		<>
 			<title>{page.pageName}</title>
 			<meta name="description" content={page.seoDescription ?? ''} />
-			<PageSections page={page} />
+			<PageSections page={page} formKey={formKey} />
 		</>
 	);
 }

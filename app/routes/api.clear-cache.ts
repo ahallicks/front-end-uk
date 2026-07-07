@@ -60,6 +60,7 @@ export async function action({
 			status: 200,
 		});
 	}
+
 	if (formData.data.__typename === 'Header') {
 		const headerCacheKey = createCacheKey('id', 'globalData', {});
 		const headerCachedResult = cache.get(headerCacheKey);
@@ -74,6 +75,30 @@ export async function action({
 		return new Response(`No cache found for header: ${headerCacheKey}`, {
 			status: 200,
 		});
+	}
+
+	if (formData.data.__typename === 'Comment') {
+		// Get the page ID from the comment data and invalidate that page's cache
+		const pageId = formData.data.page.id;
+		const pageCacheKey = createCacheKey('id', pageId, {});
+		const pageCachedResult = cache.get(pageCacheKey);
+		if (pageCachedResult) {
+			cache.delete(pageCacheKey);
+			cache.printStats();
+			return new Response(
+				`Cache cleared for page: ${pageCacheKey} due to comment update`,
+				{
+					status: 200,
+				},
+			);
+		}
+		cache.printStats();
+		return new Response(
+			`No cache found for page: ${pageCacheKey} related to comment update`,
+			{
+				status: 200,
+			},
+		);
 	}
 
 	console.log(

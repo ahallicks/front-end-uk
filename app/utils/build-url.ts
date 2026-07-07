@@ -1,4 +1,4 @@
-import type { TButtonLink } from '~/components/atoms/button/button.tsx';
+import type { TButtonLink } from '~/components/01-atoms/button/button.tsx';
 
 // Using the page data to build the correct URL path
 export const buildPageUrl = (link: TButtonLink): string => {
@@ -14,4 +14,4 @@ export const buildPageUrl = (link: TButtonLink): string => {
 		return url;
 	}
 	return link.linkUrl;
-}
+};

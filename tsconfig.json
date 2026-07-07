@@ -1,14 +1,16 @@
 {
 	"include": [
 		"global.d.ts",
-		"**/*",
+		"**/*.ts",
+		"**/*.tsx",
 		"**/.server/**/*",
 		"**/.client/**/*",
-		".react-router/types/**/*"
+		".react-router/types/**/*",
+		"tests/test-utils.ts"
 	],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable", "ES2022"],
-		"types": ["node", "vite/client"],
+		"types": ["node", "vite/client", "jest-axe"],
 		"target": "ES2022",
 		"module": "ES2022",
 		"moduleResolution": "bundler",
@@ -16,7 +18,8 @@
 		"rootDirs": [".", "./.react-router/types"],
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["./app/*"]
+			"~/*": ["./app/*"],
+			"~~/*": ["./*"]
 		},
 		"isolatedModules": true,
 		"ignoreDeprecations": "6.0",

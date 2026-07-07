@@ -1,30 +1,43 @@
-import type { IArticleCards } from '~/components/organisms/article-cards/article-cards-types.ts';
-import type { IBanner } from '~/components/molecules/banner/banner-types.ts';
-import type { IContent } from '~/components/molecules/content/content-types.ts';
-import type { IDivider } from '~/components/atoms/divider/divider-types.ts';
-import type { IFeatureBlock } from '~/components/molecules/feature/feature-types.ts';
-import type { IHero } from '~/components/molecules/hero/hero-types.ts';
-import type { ILogoCloud } from '~/components/molecules/logo-cloud/logo-cloud-types.ts';
+import type { IComment } from '~/components/01-atoms/comment/comment-types.ts';
+import type { IDivider } from '~/components/01-atoms/divider/divider-types.ts';
+import type { IBanner } from '~/components/02-molecules/banner/banner-types.ts';
+import type { IContent } from '~/components/02-molecules/content/content-types.ts';
+import type { IFeatureBlock } from '~/components/02-molecules/feature/feature-types.ts';
+import type { IHero } from '~/components/02-molecules/hero/hero-types.ts';
+import type { ILogoCloud } from '~/components/02-molecules/logo-cloud/logo-cloud-types.ts';
+import type { IArticleCards } from '~/components/03-organisms/article-cards/article-cards-types.ts';
 
 import { GraphQLClient, gql } from 'graphql-request';
 
 import { NotRedis, createCacheKey } from '~/services/notredis.ts';
-import { fixThePage } from '~/utils/page-fixer.ts';
 import { tc } from '~/services/terminal-colours.ts';
+import { fixThePage } from '~/utils/page-fixer.ts';
 
-import { ArticleCardsFragment } from '~/components/organisms/article-cards/article-cards-fragment.ts';
-import { BannerFragment } from '~/components/molecules/banner/banner-fragment.tsx';
-import { ContentFragment } from '~/components/molecules/content/content-fragment.ts';
-import { DividerFragment } from '~/components/atoms/divider/divider-fragment.ts';
-import { FeatureFragment } from '~/components/molecules/feature/feature-fragment.tsx';
-import { HeroFragment } from '~/components/molecules/hero/hero-fragment.tsx';
-import { LogoCloudFragment } from '~/components/molecules/logo-cloud/logo-cloud-fragment.ts';
+import { DividerFragment } from '~/components/01-atoms/divider/divider-fragment.ts';
+import { BannerFragment } from '~/components/02-molecules/banner/banner-fragment.ts';
+import { ContentFragment } from '~/components/02-molecules/content/content-fragment.ts';
+import { FeatureFragment } from '~/components/02-molecules/feature/feature-fragment.ts';
+import { HeroFragment } from '~/components/02-molecules/hero/hero-fragment.ts';
+import { LogoCloudFragment } from '~/components/02-molecules/logo-cloud/logo-cloud-fragment.ts';
+import { ArticleCardsFragment } from '~/components/03-organisms/article-cards/article-cards-fragment.ts';
 
 export interface IHomepage {
 	id: string;
 	pageName: string;
 	seoDescription?: string;
-	sections: IHero[] | IFeatureBlock[] | IBanner[] | ILogoCloud[] | IContent[] | IArticleCards[] | IDivider[];
+	enableComments?: boolean;
+	comments: IComment[];
+	created: string;
+	updated?: string;
+	published?: string;
+	sections:
+		| IHero[]
+		| IFeatureBlock[]
+		| IBanner[]
+		| ILogoCloud[]
+		| IContent[]
+		| IArticleCards[]
+		| IDivider[];
 }
 
 const getHomepageQuery = gql`
@@ -33,6 +46,7 @@ const getHomepageQuery = gql`
 			id
 			pageName
 			seoDescription
+			
 			sections {
 				__typename
 				${HeroFragment}
@@ -58,9 +72,12 @@ export const getHomepage = async (): Promise<IHomepage> => {
 		}
 
 		const startTime = performance.now();
-		const hygraph = new GraphQLClient(process.env.HYGRAPH_ENDPOINT as string, {
-			headers: {},
-		});
+		const hygraph = new GraphQLClient(
+			process.env.HYGRAPH_ENDPOINT as string,
+			{
+				headers: {},
+			},
+		);
 
 		const { homepage }: { homepage: IHomepage } =
 			await hygraph.request(getHomepageQuery);
@@ -76,4 +93,4 @@ export const getHomepage = async (): Promise<IHomepage> => {
 		console.error('Error fetching page data:', error);
 		throw new Response('Page not found', { status: 404 });
 	}
-}
+};

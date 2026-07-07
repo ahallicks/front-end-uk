@@ -1,12 +1,14 @@
-import type { IBanner } from '~/components/molecules/banner/banner-types.ts';
-import type { ILogoCloud } from '~/components/molecules/logo-cloud/logo-cloud-types.ts';
-import type { IStrip } from '~/components/molecules/strip/strip-types.ts';
+import type { IBanner } from '~/components/02-molecules/banner/banner-types.ts';
+import type { ILogoCloud } from '~/components/02-molecules/logo-cloud/logo-cloud-types.ts';
+import type { IStrip } from '~/components/02-molecules/strip/strip-types.ts';
 import type { TImage } from '~/types/global-types.ts';
 
 import { GraphQLClient, gql } from 'graphql-request';
-import { LogoCloudFragment } from '~/components/molecules/logo-cloud/logo-cloud-fragment.ts';
-import { StripFragment } from '~/components/molecules/strip/strip-fragment.ts';
-import { BannerFragment } from '~/components/molecules/banner/banner-fragment.tsx';
+
+import { BannerFragment } from '~/components/02-molecules/banner/banner-fragment.ts';
+import { LogoCloudFragment } from '~/components/02-molecules/logo-cloud/logo-cloud-fragment.ts';
+import { StripFragment } from '~/components/02-molecules/strip/strip-fragment.ts';
+
 import { NotRedis, createCacheKey } from './notredis.ts';
 import { tc } from './terminal-colours.ts';
 

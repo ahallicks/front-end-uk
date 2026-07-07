@@ -1,8 +1,10 @@
-import type { toHaveNoViolations } from './../node_modules/@types/jest-axe/index.d.ts';
+import 'vitest-axe/extend-expect';
+import '@testing-library/jest-dom/vitest';
 
 import { expect } from 'vitest';
-import { axe } from 'vitest-axe';
 import * as matchers from 'vitest-axe/matchers';
+
+import axe from './configure-axe.ts';
 expect.extend(matchers);
 
 export const checkA11y = async (

@@ -1,20 +1,23 @@
 import type { IHomepage } from '~/services/get-homepage.ts';
 
-import { useLoaderData } from 'react-router';
 import { Fragment } from 'react/jsx-runtime';
+import { useLoaderData } from 'react-router';
 
 import { getHomepage } from '~/services/get-homepage.ts';
 
-import { ArticleCards } from '~/components/organisms/article-cards/article-cards.tsx';
-import { Banner, BannerSmall } from '~/components/molecules/banner/banner.tsx';
-import { Content } from '~/components/molecules/content/content.tsx';
 import {
 	Divider,
 	DividerWithText,
-} from '~/components/atoms/divider/divider.tsx';
-import { Features } from '~/components/molecules/feature/feature.tsx';
-import { Hero } from '~/components/molecules/hero/hero.tsx';
-import { LogoCloud } from '~/components/molecules/logo-cloud/logo-cloud.tsx';
+} from '~/components/01-atoms/divider/divider.tsx';
+import {
+	Banner,
+	BannerSmall,
+} from '~/components/02-molecules/banner/banner.tsx';
+import { Content } from '~/components/02-molecules/content/content.tsx';
+import { Features } from '~/components/02-molecules/feature/feature.tsx';
+import { Hero } from '~/components/02-molecules/hero/hero.tsx';
+import { LogoCloud } from '~/components/02-molecules/logo-cloud/logo-cloud.tsx';
+import { ArticleCards } from '~/components/03-organisms/article-cards/article-cards.tsx';
 
 export const loader = async (): Promise<{ homepage: IHomepage }> => {
 	try {
@@ -54,7 +57,11 @@ export default function Home(): React.ReactNode {
 						<LogoCloud {...section} contentId={homepage.id} />
 					) : null}
 					{section.__typename === 'Content' ? (
-						<Content {...section} contentId={homepage.id} />
+						<Content
+							{...section}
+							contentId={homepage.id}
+							page={homepage}
+						/>
 					) : null}
 					{section.__typename === 'ArticleCards' ? (
 						<ArticleCards {...section} contentId={homepage.id} />

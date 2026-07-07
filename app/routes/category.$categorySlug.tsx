@@ -5,7 +5,7 @@ import { useLoaderData } from 'react-router';
 
 import { getCategoryPage } from '~/services/get-category-page.ts';
 
-import { ArticleCards } from '~/components/organisms/article-cards/article-cards.tsx';
+import { ArticleCards } from '~/components/03-organisms/article-cards/article-cards.tsx';
 
 export const loader = async ({
 	params,

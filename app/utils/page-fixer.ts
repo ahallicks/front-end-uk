@@ -1,8 +1,8 @@
-import type { IArticleCards } from '~/components/organisms/article-cards/article-cards-types.ts';
-import type { IAuthorCard } from '~/components/molecules/author-card/author-card-types.ts';
-import type { TCategoryPage } from '~/types/global-types.ts';
+import type { IAuthorCard } from '~/components/02-molecules/author-card/author-card-types.ts';
+import type { IArticleCards } from '~/components/03-organisms/article-cards/article-cards-types.ts';
 import type { IHomepage } from '~/services/get-homepage.ts';
 import type { IPage } from '~/services/get-page.ts';
+import type { TCategoryPage } from '~/types/global-types.ts';
 
 import { getGravatarUrl } from '~/utils/gravatar.ts';
 
@@ -26,6 +26,20 @@ export const fixThePage = <T>(page: IPage | IHomepage): T => {
 			(section) => section.__typename === 'AuthorCard',
 		) as IAuthorCard;
 		authorSection.author = fixTheAuthorGravatar(authorSection.author);
+	}
+
+	// Fix up the gravatr for comments
+	if (page.comments?.length) {
+		page.comments = page.comments.map((comment) => {
+			if (comment.email) {
+				comment.image = {
+					url: getGravatarUrl(comment.email),
+					width: 80,
+					height: 80,
+				};
+			}
+			return comment;
+		});
 	}
 
 	// Fix up the gravatar URL in article cards and flip the order so that the newest
